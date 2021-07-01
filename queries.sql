@@ -88,6 +88,12 @@ GROUP BY name
 ORDER BY s DESC;
 
 
+--Find the subset of all entries with both a critic score and a user score
+--Copy this subset to a CSV file for further data analysis
 
+COPY (
+	SELECT * FROM game_sales
+	WHERE critic_score IS NOT NULL AND user_score IS NOT NULL
+) TO '/tmp/games_with_scores.csv' DELIMITER ',' CSV HEADER;
 
 
