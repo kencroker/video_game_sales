@@ -88,12 +88,20 @@ GROUP BY name
 ORDER BY s DESC;
 
 
---Find the subset of all entries with both a critic score and a user score
+--Find the subset of all games with both a critic score and a user score
 --Copy this subset to a CSV file for further data analysis
 
+--Note: I've grouped by name here since entries are sometimes double listed (eg. the Xbox 360 and PS3 versions of Skyrim get listed as separate games)
+--I want a single entry with the name Skyrim that aggregates the sales and averages the critic scores from all the different platform versions
+
 COPY (
-	SELECT * FROM game_sales
-	WHERE critic_score IS NOT NULL AND user_score IS NOT NULL
+
+	SELECT name, min(publisher) as publisher, json_agg(platform) as platforms, count(platform) as num_platforms, min(year_released) as year_released,
+		min(genre) as genre, sum(na_sales) as na_sales, sum(eu_sales) as eu_sales, sum(jp_sales) as jp_sales,
+       		sum(other_sales) as other_sales, sum(global_sales) as global_sales, avg(critic_score) as critic_score, sum(critic_count) as critic_count,
+		avg(user_score) as user_score, sum(user_count) as user_count, min(developer) as developer, min(rating) as rating 
+	FROM game_sales                                          
+	WHERE critic_score is NOT NULL and user_score is NOT NULL
+	GROUP BY name
+
 ) TO '/tmp/games_with_scores.csv' DELIMITER ',' CSV HEADER;
-
-
