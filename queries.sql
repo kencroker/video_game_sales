@@ -18,7 +18,7 @@ CREATE TABLE game_sales (
 );
 
 
---Impoer our file all_games.csv into the all_games table
+--Import our dataset all_games.csv into the all_games table
 --Note: you may want to COPY FROM an absolute file path instead if you've saved all_sales.csv somewhere specific in your file system
 COPY game_sales FROM 'all_sales.csv'
 DELIMITER ','
@@ -60,23 +60,11 @@ AND publisher LIKE '%Electronic Arts%' OR publisher LIKE '%EA%';
 
 
 
---Find the top selling 100 games of 2016. (unique names)
---Of those games what percentage went to each platform?
---What percentage of those games had an Xbox version? What percentage had a PS4 version?
-
+--Find the top selling 100 games of 2016. 
 SELECT DISTINCT(name), publisher, global_sales, platform FROM game_sales
 WHERE year_released = 2016
 ORDER BY global_sales DESC
 LIMIT 100;
-
-
-
-
---Get unique titles
-SELECT * FROM game_sales
-GROUP BY name
-LIMIT 100;
-
 
 
 
